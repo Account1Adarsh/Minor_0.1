@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+    // Toggle between light and dark modes with a smooth transition
+    function toggleMode() {
+        const body = document.body;
+        const isDark = body.classList.contains('dark-mode');
+
+        body.classList.toggle('dark-mode', !isDark);
+        body.classList.toggle('light-mode', isDark);
+
+        // Update toggle button status
+        document.getElementById('toggleButton').checked = !isDark;
+
+        // Save theme preference
+        localStorage.setItem('mode', isDark ? 'light' : 'dark');
+    }
+
+    // Set initial theme based on localStorage
+    document.addEventListener('DOMContentLoaded', function () {
+        const savedMode = localStorage.getItem('mode') || 'light';
+        document.body.classList.add(savedMode + '-mode');
+        document.getElementById('toggleButton').checked = savedMode === 'dark';
+    });
+</script>
+
+<!-- Fixed Header with Website Name and Navigation Links -->
+<header class="fixed-top bg-primary text-white py-3 px-5 d-flex justify-content-between align-items-center">
+    <h1 class="website-name font-weight-bold">OpenLib</h1>
+    <nav>
+        <a href="#" class="text-white mx-3 font-weight-bold">Home</a>
+        {% comment %} <a href="#" class="text-white mx-3 font-weight-bold">Profile</a> {% endcomment %}
+        {% comment %} <a href="#" class="text-white mx-3 font-weight-bold">Search</a> {% endcomment %}
+        
+        <!-- Toggle switch button for dark mode -->
+        <label class="toggle-switch">
+            <input type="checkbox" id="toggleButton" onclick="toggleMode()">
+            <span class="slider round"></span>
+        </label>
+
+        <!-- Logout Button -->
+        <a href="{% url 'logout' %}" class="btn btn-danger ml-3">Logout</a>
+    </nav>
+</header>
+
+<div class="container mt-5 pt-5">
+    <!-- User Details Card - Full Width -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-user-circle"></i> User Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-user"></i> <strong>Username:</strong> {{ request.user.username }}</p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ request.user.email }}</p>
+                    <p><i class="fas fa-user-tag"></i> <strong>Account Type:</strong> 
+                        {% if user_is_acadmin %} ACAdmin {% else %} Regular User {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider Line Between User Details and Other Cards -->
+    <hr class="my-4">
+
+    <!-- Other Cards Section -->
+    <div class="row">
+        <!-- My Issued Books Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bold text-primary">My Issued Books</h5>
+                    <p class="card-text">View the books currently issued to you, along with their due dates and fines (if any).</p>
+                    <a href="{% url 'user_issued_books' %}" class="btn btn-primary">View Issued Books</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Streak Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bold text-primary">Login Streak</h5>
+                    <p class="card-text">Track your daily and weekly login streaks to stay consistent!</p>
+                    <a href="{% url 'login_streak' %}" class="btn btn-primary">View Streak</a>
+                </div>
+            </div>
+        </div>
+
+        {% comment %} <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bold text-primary">Issue a Book</h5>
+                    <p class="card-text">Select a book from the available list to issue it.</p>
+                    <a href="{% url 'issue_book' %}" class="btn btn-primary">Issue a Book</a>
+                </div>
+            </div>
+        </div> {% endcomment %}
+        <!-- List of Books Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bold text-primary">List of Books</h5>
+                    <p class="card-text">Browse the available books in our library collection.</p>
+                    <a href="{% url 'book_list' %}" class="btn btn-primary">View Books</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Light mode and dark mode styling */
+    .light-mode {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+    }
+
+    .dark-mode {
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+    }
+
+    body.light-mode, body.dark-mode {
+        transition: background-color 0.3s, color 0.3s;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+
+    /* Header and toggle switch styling */
+    header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .toggle-switch {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .slider {
+        position: relative;
+        width: 34px;
+        height: 20px;
+        background-color: #ccc;
+        border-radius: 34px;
+        transition: 0.4s;
+    }
+
+    .slider:before {
+        content: "";
+        position: absolute;
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        background-color: white;
+        transition: 0.4s;
+        left: 4px;
+        top: 4px;
+    }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(14px);
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+    }
+
+    hr.my-4 {
+        border-top: 2px solid #ddd;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% comment %} {% extends 'base.html' %}
+{% block content %}
+<h1>Available Books</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Available Copies</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.category }}</td>
+            <td>{{ book.available_copies }}</td>
+            <td>
+                {% if book.available_copies > 0 %}
+                <a href="{% url 'issue_book' book.id %}" class="btn btn-success">Issue</a>
+                {% else %}
+                <span class="text-danger">Unavailable</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="text-warning">Note: You can issue a maximum of 5 books at a time.</p>
+{% endblock %} {% endcomment %}
+
+
+<div class="container mt-5">
+    <h1 class="text-primary text-center mb-4">Available Books</h1>
+    <div class="row">
+        
+                {% for book in books %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">Author: {{ book.author }}</p>
+                            <p class="card-text">Available Copies: {{ book.available_copies }}</p>
+                            {% comment %} <a href="{% url 'issue_book' book.id %}" class="btn btn-primary">Issue Book</a> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            
+        
+    </div>
+</div>
+{% endblock %}

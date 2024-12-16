@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Issued Books</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Title</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Days Left</th>
+            <th>Fine</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in issued_books %}
+        <tr>
+            <td>{{ book.book.title }}</td>
+            <td>{{ book.issue_date }}</td>
+            <td>{{ book.due_date }}</td>
+            <td>{{ book.days_left }}</td>
+            <td>{{ book.fine }}</td>
+            <td>
+                <a href="{% url 'return_book' book.id %}" class="btn btn-danger">Return</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

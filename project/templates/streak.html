@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Streak</title>
+    <link rel="stylesheet" href="{% static 'streak.css' %}">
+</head>
+<body>
+    <div id="streak-container">
+        <h2>Daily Login Streak</h2>
+
+        <div id="current-week">
+            <h3>Current Week (Mon-Sat)</h3>
+            <ul>
+                {% for day in current_week %}
+                    <li class="{% if day %}active{% else %}inactive{% endif %}">
+                        {% if day %} ⭐ {{ day.date }} {% else %} No Login {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <button onclick="toggleWeeklyData()">Show Last 4 Weeks</button>
+
+        <div id="last-4-weeks" style="display:none;">
+            {% for week, days in last_4_weeks.items %}
+                <h4>{{ week }}</h4>
+                <ul>
+                    {% for day in days %}
+                        <li class="{% if day %}active{% else %}inactive{% endif %}">
+                            {% if day %} ⭐ {{ day.date }} {% else %} No Login {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle at Top Right -->
+    <label class="toggle-switch">
+        <input type="checkbox" id="toggleButton" onclick="toggleMode()">
+        <span class="slider round"></span>
+    </label>
+
+    <script src="{% static 'streak.js' %}"></script>
+</body>
+</html>
